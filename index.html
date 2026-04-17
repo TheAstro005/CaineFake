@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>CaineFake</title>
+    <script type="module" src="https://unpkg.com"></script>
+    <style>
+        body { margin: 0; background-image: url('BGforSITE.jpeg'); background-size: cover; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        model-viewer { width: 100%; height: 90vh; }
+    </style>
+</head>
+<body>
+    <model-viewer id="caine" src="Caine_V1.glb" auto-rotate camera-controls></model-viewer>
+
+    <script>
+        const caine = document.querySelector('#caine');
+        const suoni = ['OhZooble.mp3', 'OhBubble_1.mp3', 'whoknows.mp3'];
+        caine.addEventListener('click', () => {
+            const randomSuono = suoni[Math.floor(Math.random() * suoni.length)];
+            new Audio(randomSuono).play();
+        });
+    </script>
+</body>
+</html>

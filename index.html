@@ -1,38 +1,82 @@
-<script>
-  const caine = document.querySelector('#caine');
-  const suoni = ['OhZooble.mp3', 'OhBubble_1.mp3', 'whoknows.mp3'];
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>CaineFake</title>
+    <!-- Script per il 3D -->
+    <script type="module" src="https://googleapis.com"></script>
+    
+    <style>
+        body { 
+            margin: 0; 
+            background-image: url('BGforSITE.jpeg'); 
+            background-size: cover; 
+            background-position: center;
+            overflow: hidden; 
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        model-viewer { 
+            width: 100%; 
+            height: 90vh; 
+        }
+    </style>
+</head>
+<body>
 
-  let tempo = 0;
-  function volo() {
-      tempo += 0.05;
-      const oscillazioneY = Math.sin(tempo) * 2; 
-      const oscillazioneX = Math.cos(tempo * 0.5) * 2;
-      caine.style.transform = translate(${oscillazioneX}px, ${oscillazioneY}px);
-      requestAnimationFrame(volo);
-  }
-  volo();
+    <model-viewer id="caine" 
+        src="Caine_V1.glb" 
+        auto-rotate 
+        camera-controls 
+        interaction-prompt="none"
+        alt="Caine">
+    </model-viewer>
 
-  function caineParla() {
-      const frase = suoni[Math.floor(Math.random() * suoni.length)];
-      const audio = new Audio(frase);
-      caine.autoRotate = false;
-      caine.cameraOrbit = "0deg 75deg 105%";
+    <script>
+        const caine = document.querySelector('#caine');
+        const suoni = ['OhZooble.mp3', 'OhBubble_1.mp3', 'whoknows.mp3'];
+        
+        // 1. VOLO LEGGERO
+        let tempo = 0;
+        function volo() {
+            tempo += 0.05;
+            const y = Math.sin(tempo) * 15; // Oscilla su e giù
+            const x = Math.cos(tempo * 0.5) * 10; // Oscilla destra/sinistra
+            caine.style.transform = translate(${x}px, ${y}px);
+            requestAnimationFrame(volo);
+        }
+        volo();
 
-      const intervalloVoce = setInterval(() => {
-          caine.style.scale = 1 + (Math.random() * 0.05);
-      }, 50);
+        // 2. FUNZIONE PARLATO
+        function caineParla() {
+            const frase = suoni[Math.floor(Math.random() * suoni.length)];
+            const audio = new Audio(frase);
+            
+            caine.autoRotate = false;
+            caine.cameraOrbit = "0deg 75deg 105%";
 
-      audio.play();
+            // Effetto vibrazione "cartone animato"
+            const intervalloVoce = setInterval(() => {
+                caine.style.scale = 1 + (Math.random() * 0.05);
+            }, 50);
 
-      audio.onended = () => {
-          clearInterval(intervalloVoce);
-          caine.style.scale = 1;
-          caine.autoRotate = true;
-      };
-  }
+            audio.play();
 
-  window.addEventListener('click', () => {
-      caineParla();
-      setInterval(caineParla, 8000);
-  }, { once: true });
-</script>
+            audio.onended = () => {
+                clearInterval(intervalloVoce);
+                caine.style.scale = 1;
+                caine.autoRotate = true;
+            };
+        }
+
+        // 3. ATTIVAZIONE AL CLICK (necessaria per l'audio)
+        window.addEventListener('click', () => {
+            caineParla(); // Dice la prima frase subito
+            setInterval(caineParla, 8000); // Poi una ogni 8 secondi
+        }, { once: true });
+    </script>
+
+</body>
+</html>

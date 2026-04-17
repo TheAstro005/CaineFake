@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>CaineFake</title>
+    <!-- RIGA 6 CORRETTA: Senza questa Caine resta invisibile! -->
     <script type="module" src="https://unpkg.com"></script>
     <style>
         body { margin: 0; background-image: url('BGforSITE.jpeg'); background-size: cover; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
@@ -15,7 +16,20 @@
     <script>
         const caine = document.querySelector('#caine');
         const suoni = ['OhZooble.mp3', 'OhBubble_1.mp3', 'whoknows.mp3'];
+        
+        // Sostituisci 'musica.mp3' con il nome esatto del tuo file musicale
+        const bgMusic = new Audio('musica.mp3'); 
+        bgMusic.loop = true;
+        let musicaPartita = false;
+
         caine.addEventListener('click', () => {
+            // Fa partire la musica al primo clic
+            if (!musicaPartita) {
+                bgMusic.play();
+                musicaPartita = true;
+            }
+
+            // Fa parlare Caine
             const randomSuono = suoni[Math.floor(Math.random() * suoni.length)];
             new Audio(randomSuono).play();
         });

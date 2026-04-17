@@ -1,44 +1,38 @@
-const caine = document.querySelector('#caine');
-const suoni = ['OhZooble.mp3', 'OhBubble_1.mp3', 'whoknows.mp3'];
+<script>
+  const caine = document.querySelector('#caine');
+  const suoni = ['OhZooble.mp3', 'OhBubble_1.mp3', 'whoknows.mp3'];
 
-// 1. VOLO LEGGERO (Fluttua da solo)
-let tempo = 0;
-function volo() {
-    tempo += 0.05;
-    // Fa oscillare il modello su e giù e un po' a destra/sinistra
-    const oscillazioneY = Math.sin(tempo) * 2; 
-    const oscillazioneX = Math.cos(tempo * 0.5) * 2;
-    caine.style.transform = translate(${oscillazioneX}px, ${oscillazioneY}px);
-    requestAnimationFrame(volo);
-}
-volo();
+  let tempo = 0;
+  function volo() {
+      tempo += 0.05;
+      const oscillazioneY = Math.sin(tempo) * 2; 
+      const oscillazioneX = Math.cos(tempo * 0.5) * 2;
+      caine.style.transform = translate(${oscillazioneX}px, ${oscillazioneY}px);
+      requestAnimationFrame(volo);
+  }
+  volo();
 
-// 2. FUNZIONE PARLATO (Senza animazioni Blender)
-function caineParla() {
-    const frase = suoni[Math.floor(Math.random() * suoni.length)];
-    const audio = new Audio(frase);
+  function caineParla() {
+      const frase = suoni[Math.floor(Math.random() * suoni.length)];
+      const audio = new Audio(frase);
+      caine.autoRotate = false;
+      caine.cameraOrbit = "0deg 75deg 105%";
 
-    // Effetto "Parlato": lo facciamo vibrare e guardare avanti
-    caine.autoRotate = false;
-    caine.cameraOrbit = "0deg 75deg 105%"; // Lo gira verso l'utente
+      const intervalloVoce = setInterval(() => {
+          caine.style.scale = 1 + (Math.random() * 0.05);
+      }, 50);
 
-    // Crea un piccolo tremolio tipo cartone animato mentre parla
-    const intervalloVoce = setInterval(() => {
-        caine.style.scale = 1 + (Math.random() * 0.05); // Si ingrandisce e rimpicciolisce pochissimo
-    }, 50);
+      audio.play();
 
-    audio.play();
+      audio.onended = () => {
+          clearInterval(intervalloVoce);
+          caine.style.scale = 1;
+          caine.autoRotate = true;
+      };
+  }
 
-    audio.onended = () => {
-        clearInterval(intervalloVoce);
-        caine.style.scale = 1; // Torna normale
-        caine.autoRotate = true; // Ricomincia a girare
-    };
-}
-
-// 3. IL TIMER (Parte dopo il primo click sulla pagina)
-window.addEventListener('click', () => {
-    // Parte subito la prima frase, poi ogni 8 secondi
-    caineParla();
-    setInterval(caineParla, 8000);
-}, { once: true })
+  window.addEventListener('click', () => {
+      caineParla();
+      setInterval(caineParla, 8000);
+  }, { once: true });
+</script>

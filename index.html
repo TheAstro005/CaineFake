@@ -48,7 +48,7 @@
             tempo += 0.05;
             const y = Math.sin(tempo) * 15;
             const x = Math.cos(tempo * 0.5) * 10;
-            caine.style.transform = translate(${x}px, ${y}px);
+       caine.style.transform = "translate(" + x + "px, " + y + "px)";
             requestAnimationFrame(volo);
         }
         volo();

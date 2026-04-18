@@ -43,16 +43,16 @@
         let tempo = 0;
         let attivato = false;
 
-        // 1. FUNZIONE PER IL MOVIMENTO (VOLO)
+      // 1. FUNZIONE PER IL MOVIMENTO (VOLO)
         function volo() {
             tempo += 0.05;
             const y = Math.sin(tempo) * 15;
             const x = Math.cos(tempo * 0.5) * 10;
-       caine.style.transform = "translate(" + x + "px, " + y + "px)";
+            caine.style.transform = "translate(" + x + "px," + y + "px)";
             requestAnimationFrame(volo);
         }
         volo();
-
+        
         // 2. FUNZIONE PER FAR PARLARE CAINE
         function caineParla() {
             const frase = suoni[Math.floor(Math.random() * suoni.length)];

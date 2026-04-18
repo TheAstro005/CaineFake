@@ -3,57 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <title>CaineFake</title>
-    <!-- Script per il 3D -->
+    <!-- Script fondamentale per visualizzare il modello 3D -->
     <script type="module" src="https://googleapis.com"></script>
-    
+
     <style>
-        body { 
-            margin: 0; 
-            background-image: url('BGforSITE.jpeg'); 
-            background-size: cover; 
+        body {
+            margin: 0;
+            background-image: url('BGforSITE.jpeg');
+            background-size: cover;
             background-position: center;
-            overflow: hidden; 
+            overflow: hidden;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
         }
-        model-viewer { 
-            width: 100%; 
-            height: 90vh; 
+
+        model-viewer {
+            width: 100%;
+            height: 90vh;
+            display: block; /* Fondamentale per vedere il modello */
         }
     </style>
 </head>
 <body>
 
+    <!-- Assicurati che il nome del file src sia IDENTICO a quello caricato su GitHub -->
     <model-viewer id="caine" 
         src="Caine_V1.glb" 
         auto-rotate 
         camera-controls 
-        interaction-prompt="none"
+        interaction-prompt="none" 
         alt="Caine">
     </model-viewer>
 
     <script>
         const caine = document.querySelector('#caine');
         const suoni = ['OhZooble.mp3', 'OhBubble_1.mp3', 'whoknows.mp3'];
-        
-        // 1. VOLO LEGGERO
         let tempo = 0;
+        let attivato = false;
+
+        // 1. FUNZIONE PER IL MOVIMENTO (VOLO)
         function volo() {
             tempo += 0.05;
-            const y = Math.sin(tempo) * 15; // Oscilla su e giù
-            const x = Math.cos(tempo * 0.5) * 10; // Oscilla destra/sinistra
+            const y = Math.sin(tempo) * 15;
+            const x = Math.cos(tempo * 0.5) * 10;
             caine.style.transform = translate(${x}px, ${y}px);
             requestAnimationFrame(volo);
         }
         volo();
 
-        // 2. FUNZIONE PARLATO
+        // 2. FUNZIONE PER FAR PARLARE CAINE
         function caineParla() {
             const frase = suoni[Math.floor(Math.random() * suoni.length)];
             const audio = new Audio(frase);
             
+            // Impostazioni quando inizia a parlare
             caine.autoRotate = false;
             caine.cameraOrbit = "0deg 75deg 105%";
 
@@ -64,6 +69,7 @@
 
             audio.play();
 
+            // Quando finisce l'audio, resetta tutto
             audio.onended = () => {
                 clearInterval(intervalloVoce);
                 caine.style.scale = 1;
@@ -71,18 +77,20 @@
             };
         }
 
-     // 3. ATTIVAZIONE AL CLICK
-let attivato = false;
-
-window.addEventListener('click', () => {
-    if (!attivato) {
-        caineParla(); // Parla subito la prima volta
-        
-        // Avvia il timer solo se non è già attivo
-        setInterval(() => {
-            caineParla();
-        }, 8000);
-        
-        attivato = true; 
-    }
-});
+        // 3. ATTIVAZIONE AL CLICK (necessaria per sbloccare l'audio nei browser)
+        window.addEventListener('click', () => {
+            if (!attivato) {
+                caineParla(); // Parla subito al primo click
+                
+                // Avvia il timer automatico ogni 8 secondi
+                setInterval(caineParla, 8000);
+                
+                attivato = true;
+            } else {
+                // Se è già attivato, cliccando ancora parla a comando
+                caineParla();
+            }
+        });
+    </script>
+</body>
+</html>
